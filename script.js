@@ -3,10 +3,10 @@ import axios from "axios";
 const containerVideos = document.querySelector(".videos__container");
 
 async function buscarEMostrarVideos() {
+  containerVideos.innerHTML = "";
+
   try {
     const urlVideos = import.meta.env.VITE_URL_VIDEOS;
-
-    console.log(urlVideos);
 
     const busca = await axios.get(urlVideos);
     const videos = await busca.data;
@@ -80,4 +80,58 @@ function filtrarPorCategoria(filtro) {
       video.style.display = "block";
     }
   }
+}
+
+const botaoAbrirFormulario = document.querySelector(".cabecalho__cadastrar");
+
+botaoAbrirFormulario.addEventListener("click", mostrarFormulario);
+
+const botaoFecharFormulario = document.querySelector(".formulario__fechar");
+
+botaoFecharFormulario.addEventListener("click", fecharFormulario);
+
+const formularioCadastro = document.querySelector(".formulario__conteudo");
+
+formularioCadastro.addEventListener("submit", manipularSubmicao);
+
+function mostrarFormulario() {
+  document.getElementById("formularioContainer").style.display = "flex";
+  document.getElementById("titulo").focus();
+}
+
+function fecharFormulario() {
+  document.getElementById("formularioContainer").style.display = "none";
+}
+
+async function manipularSubmicao(event) {
+  event.preventDefault();
+
+  const titulo = this.querySelector("#titulo").value;
+  const descricao = this.querySelector("#descricao").value;
+  const url = this.querySelector("#url").value;
+  const imagem = this.querySelector("#imagem").value;
+  const categoria = this.querySelector("#categoria").value;
+
+  try {
+    axios.post(import.meta.env.VITE_URL_VIDEOS, {
+      titulo,
+      descricao,
+      url,
+      imagem,
+      categoria,
+    });
+    location.reload();
+  } catch (error) {
+    containerVideos.innerHTML = `<p> Houve um erro ao salvar os vídeos: ${error}</p>`;
+  } finally {
+    limparFormulario(this);
+  }
+}
+
+function limparFormulario(formulario) {
+  formulario.querySelector("#titulo").value = "";
+  formulario.querySelector("#descricao").value = "";
+  formulario.querySelector("#url").value = "";
+  formulario.querySelector("#imagem").value = "";
+  formulario.querySelector("#categoria").value = "";
 }
