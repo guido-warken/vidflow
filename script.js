@@ -120,7 +120,6 @@ async function manipularSubmicao(event) {
       imagem,
       categoria,
     });
-    location.reload();
   } catch (error) {
     containerVideos.innerHTML = `<p> Houve um erro ao salvar os vídeos: ${error}</p>`;
   } finally {
